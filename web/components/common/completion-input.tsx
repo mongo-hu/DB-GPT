@@ -14,12 +14,13 @@ interface Props {
   loading?: boolean;
   onSubmit: (val: string) => void;
   handleFinish?: (val: boolean) => void;
+  userInput:string;
+  setUserInput:any;
 }
 
-function CompletionInput({ children, loading, onSubmit, handleFinish, ...props }: PropsWithChildren<Props & TextAreaProps>) {
+function CompletionInput({ children, loading, onSubmit, handleFinish, userInput, setUserInput, ...props }: PropsWithChildren<Props & TextAreaProps>) {
   const { dbParam, scene } = useContext(ChatContext);
 
-  const [userInput, setUserInput] = useState('');
   const showUpload = useMemo(() => scene === 'chat_knowledge', [scene]);
   const [documents, setDocuments] = useState<IDocument[]>([]);
   const uploadCountRef = useRef(0);
@@ -61,7 +62,7 @@ function CompletionInput({ children, loading, onSubmit, handleFinish, ...props }
           if (e.keyCode === 13) {
             if (e.shiftKey) {
               e.preventDefault()
-              setUserInput((state) => state + '\n');
+              setUserInput((state: string) => state + '\n');
               return;
             }
             onSubmit(userInput);

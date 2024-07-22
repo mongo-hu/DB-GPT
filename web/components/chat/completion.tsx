@@ -21,6 +21,7 @@ import { apiInterceptors, getChatFeedBackSelect } from '@/client/api';
 import useSummary from '@/hooks/use-summary';
 import AgentContent from './agent-content';
 import MyEmpty from '../common/MyEmpty';
+import SpeechToText from './SpeechToText';
 
 type Props = {
   messages: IChatDialogueMessageSchema[];
@@ -40,13 +41,18 @@ const Completion = ({ messages, onSubmit }: Props) => {
   const [showMessages, setShowMessages] = useState(messages);
   const [jsonValue, setJsonValue] = useState<string>('');
   const [select_param, setSelectParam] = useState<FeedBack>();
-
+  const [userInput, setUserInput] = useState('');
   const scrollableRef = useRef<HTMLDivElement>(null);
 
   // const incremental = useMemo(() => scene === 'chat_flow', [scene]);
   const isChartChat = useMemo(() => scene === 'chat_dashboard', [scene]);
 
   const summary = useSummary();
+
+  const handleTranscript = (text: string) => {
+    setUserInput(text);
+    console.log('Received userInput:', text);
+  };
 
   const selectParam = useMemo(() => {
     switch (scene) {
@@ -62,6 +68,7 @@ const Completion = ({ messages, onSubmit }: Props) => {
   }, [scene, agent, currentDialogue, dbParam, spaceNameOriginal, flowSelectParam]);
 
   const handleChat = async (content: string) => {
+    setUserInput('')
     if (isLoading || !content.trim()) return;
     if (scene === 'chat_agent' && !agent) {
       message.warning(t('choice_agent_tip'));
@@ -215,8 +222,9 @@ const Completion = ({ messages, onSubmit }: Props) => {
       >
         <div className="flex flex-wrap w-full py-2 sm:pt-6 sm:pb-10 items-center">
           {model && <div className="mr-2 flex">{renderModelIcon(model)}</div>}
-          <CompletionInput loading={isLoading} onSubmit={handleChat} handleFinish={setIsLoading} />
+          <CompletionInput loading={isLoading} onSubmit={handleChat} handleFinish={setIsLoading} userInput={userInput} setUserInput={setUserInput}/>
         </div>
+        <SpeechToText onTranscript={handleTranscript}/>
       </div>
       <Modal
         title="JSON Editor"

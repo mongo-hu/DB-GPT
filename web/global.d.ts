@@ -14,3 +14,7 @@ declare namespace JSX {
 }
 
 declare module 'cytoscape-euler';
+
+interface Window {
+  webkitSpeechRecognition: any;
+}
