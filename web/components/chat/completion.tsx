@@ -224,7 +224,7 @@ const Completion = ({ messages, onSubmit }: Props) => {
           {model && <div className="mr-2 flex">{renderModelIcon(model)}</div>}
           <CompletionInput loading={isLoading} onSubmit={handleChat} handleFinish={setIsLoading} userInput={userInput} setUserInput={setUserInput}/>
         </div>
-        <SpeechToText onTranscript={handleTranscript}/>
+        <SpeechToText onTranscript={handleTranscript} loading={isLoading}/>
       </div>
       <Modal
         title="JSON Editor"

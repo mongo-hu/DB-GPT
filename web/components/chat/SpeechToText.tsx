@@ -2,13 +2,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 interface SpeechToTextProps {
   onTranscript: (transcript: string) => void;
+  loading:boolean;
 }
 type webkitSpeechRecognition = /*unresolved*/ any
-const SpeechToText: React.FC<SpeechToTextProps> = ({ onTranscript}) => {
+const SpeechToText: React.FC<SpeechToTextProps> = ({ onTranscript, loading}) => {
   const [isListening, setIsListening] = useState(false); // 页面可见的服务
   const [isServiceActive, setIsServiceActive] = useState(false) //接口的语音转文字服务
   const isListeningRef = useRef(isListening)
-  const [lastIndex, setLastIndex] = useState(0)
+  const [lastIndex, setLastIndex] = useState(0) //起始点
+  const [currentIndex, setCurrentIndex] = useState(0) //当前节点
   const lastIndexRef = useRef(lastIndex)
   const recognitionRef = useRef<webkitSpeechRecognition | null>(null);
 
@@ -18,7 +20,16 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ onTranscript}) => {
 
   useEffect(() => {
     lastIndexRef.current = lastIndex; // 同步状态和引用
-  }, [isListening]);
+  }, [lastIndex, isListening]);
+
+  useEffect(() => {
+    if (loading === true) {
+      setLastIndex(currentIndex)
+    }
+    if (!isListening) {
+      setLastIndex(currentIndex)
+    }
+  }, [loading, isListening]);
 
   useEffect(() => {
     if ('webkitSpeechRecognition' in window) {
@@ -31,6 +42,7 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ onTranscript}) => {
         let interim = '';
         let final = '';
         console.log(event.results)
+        setCurrentIndex(event.results.length)
         !isListeningRef.current && setLastIndex(event.results.length)
         for (let i = lastIndexRef.current; i < event.results.length; i++) {
           const transcript = event.results[i][0].transcript;
