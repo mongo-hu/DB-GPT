@@ -1,5 +1,5 @@
 import { useRequest } from 'ahooks';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Divider, Spin, Tag } from 'antd';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -19,9 +19,16 @@ const Home: NextPage = () => {
   const router = useRouter();
   const { model, setModel } = useContext(ChatContext);
   const { t } = useTranslation();
-
+  const [userInput, setUserInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [chatSceneLoading, setChatSceneLoading] = useState<boolean>(false);
+  useEffect(() => {
+  if (window.self !== window.top) {
+    // 添加一个 class 到 body
+    document.body.classList.add('hide-img');
+  }
+},[])
+
 
   const { data: scenesList = [] } = useRequest(async () => {
     setChatSceneLoading(true);
@@ -77,7 +84,7 @@ const Home: NextPage = () => {
           alt="Revolutionizing Database Interactions with Private LLM Technology"
           width={856}
           height={160}
-          className="w-full mt-4"
+          className="w-full mt-4 target-img"
           unoptimized
         />
         <Divider className="!text-[#878c93] !my-6" plain>
@@ -120,7 +127,7 @@ const Home: NextPage = () => {
           />
         </div>
         <div className="flex flex-1 w-full mb-4">
-          <CompletionInput loading={loading} onSubmit={submit} />
+          <CompletionInput loading={loading} onSubmit={submit} userInput={userInput} setUserInput={setUserInput} />
         </div>
       </div>
     </div>

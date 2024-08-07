@@ -88,3 +88,7 @@ table tr td {
 .react-flow__panel {
   display: none !important;
 }
+
+.hide-img .target-img {
+  display: none;
+}

@@ -286,7 +286,7 @@ function SideBar() {
     <div className="flex flex-col h-screen bg-white dark:bg-[#232734]">
       {/* LOGO */}
       <Link href="/" className="p-2">
-        <Image src={logo} alt="DB-GPT" width={239} height={60} className="w-full h-full" />
+        <Image src={logo} alt="DB-GPT" width={239} height={60} className="w-full h-full target-img" />
       </Link>
       <Link href="/" className="flex items-center justify-center mb-4 mx-4 h-11 bg-theme-primary rounded text-white">
         <PlusOutlined className="mr-2" />
